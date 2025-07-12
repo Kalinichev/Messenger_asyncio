@@ -11,7 +11,7 @@ class ClientMessages:
         self.dal.session = self.dal.Session()
 
     def add_client(self, username, password, info=None):
-        """Добавление клиента"""
+        """Регистрация клиента"""
         if self.get_client_by_username(username):
             return f'Пользователь {username} уже существует'
         else:
@@ -33,7 +33,7 @@ class ClientMessages:
             try:
                 self.dal.session.add(new_history)
                 self.dal.session.commit()
-                print(f'Добавлени запись в историю: {new_history}')
+                print(f'Добавление запись в историю: {new_history}')
             except IntegrityError as err:
                 print(f'Ошибка интеграции с базой данных: {err}')
                 self.dal.session.rollback()
