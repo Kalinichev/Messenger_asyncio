@@ -1,5 +1,7 @@
 from server.database.controller import ClientMessages
 from server.database.models import CBase
+from server.server_config import ENCODING
+from json import dumps, loads
 
 
 class DbInterfaceMixin:
@@ -17,3 +19,21 @@ class DbInterfaceMixin:
 
     def set_user_online(self, client_username):
         return self._cm.set_user_online(client_username)
+
+
+class ConvertMixin:
+    def _dict_to_bytes(self, msg_dict: dict) -> bytes:
+        if isinstance(msg_dict, dict):
+            jmessage = dumps(msg_dict)
+            bmessage = jmessage.encode(ENCODING)
+            return bmessage
+        raise TypeError
+
+    def _bytes_to_dict(self, msg_bytes):
+        if isinstance(msg_bytes, bytes):
+            jmessage = msg_bytes.decode(ENCODING)
+            message = loads(jmessage)
+            if isinstance(message, dict):
+                return message
+            raise TypeError
+        raise TypeError
