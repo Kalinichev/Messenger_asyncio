@@ -8,8 +8,8 @@ from server.utils.server_proto import ChatServerProtocol
 class ConsoleServerApp:
     """Console server"""
 
-    def __init__(self, pasrsed_args, db_path):
-        self.args = pasrsed_args
+    def __init__(self, parsed_args, db_path):
+        self.args = parsed_args
         self.db_path = db_path
         self.ins = None
 
