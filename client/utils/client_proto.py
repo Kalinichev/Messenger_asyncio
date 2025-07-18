@@ -6,6 +6,32 @@ from client.utils.mixins import ConvertMixin, DbInterfaceMixin
 from client.utils.client_messages import JimClientMessage
 
 
+class ClientAuth(ConvertMixin, DbInterfaceMixin):
+    def __init__(self, db_path, username=None, password=None):
+        super().__init__(db_path)
+        self.username = username
+        self.password = password
+
+    def authenticate(self):
+        if self.username and self.password:
+            usr = self.get_client_by_username(self.username)
+            dk = pbkdf2_hmac('sha256', self.password.encode('utf-8'), 'salt'.encode('utf-8'), 100_000)
+            hashed_password = hexlify(dk)
+
+            if usr:
+                if hashed_password == usr.password:
+                    self.add_client_history(self.username)
+                    return True
+                return False
+            else:
+                print('New user!')
+                self.add_client(self.username, self.password)
+                self.add_client_history(self.username)
+                return True
+        else:
+            return False
+
+
 class ChatClientProtocol(Protocol, ConvertMixin, DbInterfaceMixin):
     def __init__(self, db_path, loop, username=None, password=None, gui_instance=None, **kwargs):
         super().__init__(db_path)
@@ -44,3 +70,16 @@ class ChatClientProtocol(Protocol, ConvertMixin, DbInterfaceMixin):
                         self.output(msg)
             except Exception as e:
                 print(e)
+
+    async def get_from_console(self):
+        while not self.conn_is_open:
+            pass
+        self.output = self.output_to_console
+        self.output('{2} connected to {0}:{1}\n'.format(*self.sockname, self.user))
+
+        while True:
+            content = await self.loop.run_in_executor(None, input)
+
+    def output_tp_console(self, data):
+        _data = data
+        stdout.write(_data)
