@@ -45,7 +45,7 @@ def parse_and_run():
 
     args = parse_args()
 
-    if args['nigui']:
+    if args['nogui']:
         # start consoles server
         a = ConsoleServerApp(args, DB_PATH)
         a.main()
