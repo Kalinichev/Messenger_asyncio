@@ -80,6 +80,6 @@ class ChatClientProtocol(Protocol, ConvertMixin, DbInterfaceMixin):
         while True:
             content = await self.loop.run_in_executor(None, input)
 
-    def output_tp_console(self, data):
+    def output_to_console(self, data):
         _data = data
         stdout.write(_data)
