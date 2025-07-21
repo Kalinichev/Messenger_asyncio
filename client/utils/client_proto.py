@@ -25,7 +25,7 @@ class ClientAuth(ConvertMixin, DbInterfaceMixin):
                 return False
             else:
                 print('New user!')
-                self.add_client(self.username, self.password)
+                self.add_client(self.username, hashed_password)
                 self.add_client_history(self.username)
                 return True
         else:

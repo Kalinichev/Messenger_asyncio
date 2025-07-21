@@ -47,19 +47,21 @@ class ConsoleClientApp:
 
 def parse_and_run():
     def parse_args():
-        parser = ArgumentParser(description='Client settings')
-        parser.add_argument('--user', default='user1', type=str)
-        parser.add_argument('--password', default='qwer', type=str)
-        parser.add_argument('--addr', default='127.0.0.1', type=str)
-        parser.add_argument('--port', default=PORT, type=int)
+        parser = ArgumentParser(description="Client settings")
+        parser.add_argument("--user", default="user1", type=str)
+        parser.add_argument("--password", default="123", type=str)
+        parser.add_argument("--addr", default="127.0.0.1", type=str)
+        parser.add_argument("--port", default=PORT, type=int)
         parser.add_argument('--nogui', action='store_true')
-        return vars(parser)
+        return vars(parser.parse_args())
 
     args = parse_args()
 
     if args['nogui']:
+        # start consoles server
         a = ConsoleClientApp(args, DB_PATH)
         a.main()
+
 
 if __name__ == '__main__':
     parse_and_run()
